@@ -30,4 +30,10 @@ public class Posts {
         this.content = content;
         this.author = author;
     }
+
+    // Posts 관련 비즈니스 로직 - 엔티티에 넣음
+    public void update(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
 }
