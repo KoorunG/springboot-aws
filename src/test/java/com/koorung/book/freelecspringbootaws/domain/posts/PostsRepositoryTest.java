@@ -3,9 +3,12 @@ package com.koorung.book.freelecspringbootaws.domain.posts;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.BDDMockito;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -36,5 +39,16 @@ class PostsRepositoryTest {
         assertThat(lists).extracting("title", String.class).containsExactly("테스트 게시글");
         assertThat(lists).extracting("content", String.class).containsExactly("테스트 본문");
         assertThat(lists).extracting("author", String.class).containsExactly("koorung@naver.com");
+    }
+
+    @Test
+    @DisplayName("BaseTimeEntity 등록 - JPA Auditing")
+    void baseTimeEntityTest() {
+        Posts saved = repository.save(Posts.builder().title("title").content("content").author("author").build());
+
+        System.out.println("created : " + saved.getCreatedDate());
+        System.out.println("modified : " + saved.getModifiedDate());
+        assertThat(saved.getCreatedDate()).isBefore(LocalDateTime.now()).isAfter(LocalDateTime.now().minusSeconds(1));
+        assertThat(saved.getModifiedDate()).isBefore(LocalDateTime.now()).isAfter(LocalDateTime.now().minusSeconds(1));
     }
 }
