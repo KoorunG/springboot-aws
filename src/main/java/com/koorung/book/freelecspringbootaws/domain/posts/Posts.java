@@ -1,5 +1,6 @@
 package com.koorung.book.freelecspringbootaws.domain.posts;
 
+import com.koorung.book.freelecspringbootaws.domain.BaseTimeEntity;
 import lombok.*;
 
 import javax.persistence.Column;
@@ -10,7 +11,7 @@ import javax.persistence.Id;
 @Getter
 @Entity
 @NoArgsConstructor
-public class Posts {
+public class Posts extends BaseTimeEntity {
 
     @Id
     @GeneratedValue
