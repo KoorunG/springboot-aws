@@ -3,12 +3,15 @@ package com.koorung.book.freelecspringbootaws.web;
 import com.koorung.book.freelecspringbootaws.domain.posts.Posts;
 import com.koorung.book.freelecspringbootaws.domain.posts.PostsRepository;
 import com.koorung.book.freelecspringbootaws.web.dto.PostsSaveRequestDto;
+import com.koorung.book.freelecspringbootaws.web.dto.PostsUpdateRequestDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -37,6 +40,7 @@ class PostsApiControllerTest {
         postsRepository.deleteAll();
     }
 
+    // 등록
     @Test
     void post() {
 
@@ -48,6 +52,7 @@ class PostsApiControllerTest {
         assertThat(responseEntity.getBody()).isGreaterThan(0L);
     }
 
+    // 조회
     @Test
     void findAll() {
 
@@ -62,6 +67,41 @@ class PostsApiControllerTest {
         assertThat(all).extracting("content").containsExactly("content");
 
     }
+
+    // 수정
+    @Test
+    void update() {
+
+        Posts saved = postsRepository.save(Posts.builder()
+                .title("title")
+                .content("content")
+                .author("author")
+                .build());
+
+        Long updateId = saved.getId();
+
+        String url = "http://localhost:" + port + "/api/v1/posts/" + updateId;
+
+        PostsUpdateRequestDto updateRequestDto = PostsUpdateRequestDto.builder()
+                .title("타이틀수정1")
+                .content("콘텐츠수정1")
+                .build();
+
+        HttpEntity<PostsUpdateRequestDto> requestDtoHttpEntity = new HttpEntity<>(updateRequestDto);
+
+        ResponseEntity<Long> responseEntity = restTemplate.exchange(url, HttpMethod.PUT, requestDtoHttpEntity, Long.class);
+
+        List<Posts> all = postsRepository.findAll();
+
+        // 업데이트 행위 여부 검증
+        assertThat(responseEntity).extracting("statusCode").isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getBody()).isGreaterThan(0L);
+
+        // 업데이트 된 값 검증
+        assertThat(all).extracting("title").containsExactly("타이틀수정1");
+        assertThat(all).extracting("content").containsExactly("콘텐츠수정1");
+    }
+
 
     private void setup(){
         String title = "title";
