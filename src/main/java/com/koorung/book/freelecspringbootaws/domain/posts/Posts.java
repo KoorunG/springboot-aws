@@ -1,7 +1,9 @@
 package com.koorung.book.freelecspringbootaws.domain.posts;
 
 import com.koorung.book.freelecspringbootaws.domain.BaseTimeEntity;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
