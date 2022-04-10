@@ -8,3 +8,7 @@ spring:
     username: sa
     password:
     driver-class-name: org.h2.Driver
+
+  # application-oauth.yaml을 포함하도록 profile 설정
+  profiles:
+    include: oauth
